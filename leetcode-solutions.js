@@ -13,7 +13,19 @@ var twoSum = function (nums, target) {
 };
 
 // 2. Add 2 numbers
+// Make sure the numbers are represented in the linked list as reversed (123 => 3->2->1)
+// If not, use the helped method to reverse the linked lists
 var addTwoNumbers = function (l1, l2) {
+    var reverseListHelper = function (list) {
+        let node = list, prev, tmp;
+        while (node) {
+            tmp = node.next;
+            node.next = prev;
+            prev = node;
+            node = tmp;
+        }
+        return prev;
+    };
     let p1 = l1, p2 = l2;
     let headPtr = new ListNode();
     let head = headPtr;
