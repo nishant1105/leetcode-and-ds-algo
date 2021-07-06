@@ -49,3 +49,18 @@ var addTwoNumbers = function (l1, l2) {
     }
     return head.next;
 };
+
+// 3. Longest substring without repeating characters
+var lengthOfLongestSubstring = function (s) {
+    var charMap = new Map();
+    var ret = 0, i = 0, j = 0;
+    while (i < s.length && j < s.length) {
+        if (!charMap.has(s.charAt(j))) {
+            charMap.set(s.charAt(j++));
+            ret = Math.max(ret, j - i);
+        } else {
+            charMap.delete(s.charAt(i++));
+        }
+    }
+    return ret;
+};
