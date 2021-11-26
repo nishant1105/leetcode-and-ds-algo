@@ -64,3 +64,67 @@ var lengthOfLongestSubstring = function (s) {
     }
     return ret;
 };
+
+// 110. Is Binary Tree balanced
+var isBalanced = function (root) {
+    var ret = true;
+    var dfsHelper = function (node) {
+        if (!node) return 0;
+        const leftH = dfsHelper(node.left);
+        const rightH = dfsHelper(node.right);
+        if (Math.abs(leftH - rightH) > 1) {
+            ret = false;
+        }
+        return 1 + Math.max(leftH, rightH);
+    };
+    dfsHelper(root);
+    return ret;
+};
+
+// 70. Climbing Stairs (Like fibonacci sequence)
+var climbStairs = function (n) {
+    if (n < 4) return n;
+    let f = 2, s = 3;
+    for (let i = 4; i < n; i++) {
+        s = f + s;
+        f = s - f;
+    }
+    return f + s;
+};
+
+// 46. Permutations: Use Set to track results. Set can be used because nums are all distinct
+var permute = function (nums) {
+    var helper = function (arr, permutations, cache) {
+        if (arr.length === cache.size) {
+            permutations.push([...cache]);
+            return;
+        }
+        for (let num of arr) {
+            if (cache.has(num)) continue;
+            cache.add(num);
+            helper(arr, permutations, cache);
+            cache.delete(num);
+        }
+    };
+    var permutations = [];
+    var cache = new Set();
+    helper(nums, permutations, cache);
+    return permutations;
+};
+
+// 78. Subsets: DFS
+var subsets = function (nums) {
+    var ret = [];
+    var helper = function (arr, start) {
+        ret.push(arr);
+        for (let i = start; i < nums.length; i++) {
+            helper(arr.concat(nums[i]), i + 1);
+        }
+    };
+    helper([], 0);
+    return ret;
+};
+
+// 4. Median of 2 sorted arrays
+
+// 5. Longest palindromic substring
