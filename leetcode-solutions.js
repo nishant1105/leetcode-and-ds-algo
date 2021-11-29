@@ -389,3 +389,93 @@ HitCounter.prototype.getHits = function (timestamp) {
     }
     return this.hits.length;
 };
+
+// 286. Walls and Gates
+var wallsAndGates = function (rooms) {
+    var dfsHelper = function (row, col, dist, rooms) {
+        // Exit conditions
+        if (row < 0 || col < 0 || row >= rooms.length || col >= rooms[0].length || (rooms[row][col] <= dist && dist !== 0)) {
+            return;
+        }
+        rooms[row][col] = dist;
+        // Bottom cell
+        dfsHelper(row + 1, col, dist + 1, rooms);
+        // Above Cell
+        dfsHelper(row - 1, col, dist + 1, rooms);
+        // Right Cell
+        dfsHelper(row, col + 1, dist + 1, rooms);
+        // Left Cell
+        dfsHelper(row, col - 1, dist + 1, rooms);
+    };
+    for (let r = 0; r < rooms.length; r++) {
+        for (let c = 0; c < rooms[0].length; c++) {
+            if (rooms[r][c] === 0) {
+                dfsHelper(r, c, 0, rooms);
+            }
+        }
+    }
+};
+
+// 490. The Maze (Can the ball reach destination from start in a given maze)
+var hasPath = function (maze, start, destination) {
+    if (start[0] === destination[0] && start[1] === destination[1]) return true;
+    const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+    for (let [y, x] of dirs) {
+        let [row, col] = start;
+        while (row >= 0 && row < maze.length && col >=0 && col < maze[0].length && maze[row][col] !== 1) {
+            row = row + y;
+            col = col + x;
+        }
+        // One step back
+        row = row - y;
+        col = col - x;
+        if (maze[row][col] !== 0) continue;
+        maze[row][col] = 2;
+        if (hasPath(maze, [row, col], destination)) return true;
+    }
+    return false;
+};
+
+// 252. Meeting Rooms
+var canAttendMeetings = function (intervals) {
+    intervals.sort((a, b) => a[0] - b[0]);
+    for (let i = 1; i < intervals.length; i++) {
+        let [s1, e1] = intervals[i - 1];
+        let [s2, e2] = intervals[i];
+        if (e1 > s2) return false;
+    }
+    return true;
+};
+
+// 1135. Connecting cities with minimum cost (Using find and union)
+var minimumCost = function (n, connections) {
+    var parent = new Array(n + 1);
+    for (let i = 0; i <= n; i++) {
+        parent[i] = i;
+    }
+    var minCost = 0;
+    var find = function (x) {
+        if (parent[x] === x) {
+            return parent[x];
+        }
+        parent[x] = find(parent[x]);
+        return parent[x];
+    };
+    var union = function (x, y) {
+        let px = find(x), py = find(y);
+        if (px !== py) {
+            parent[px] = py;
+            n--;
+        }
+    };
+    // Sort based on cost
+    connections.sort((a, b) => a[2] - b[2]);
+    for (let con of connections) {
+        let [source, dest] = [con[0], con[1]];
+        if (find(source) !== find(dest)) {
+            minCost = minCost + con[2];
+            union(source, dest);
+        }
+    }
+    return n === 1 ? minCost : -1;
+};
