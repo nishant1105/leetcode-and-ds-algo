@@ -479,3 +479,25 @@ var minimumCost = function (n, connections) {
     }
     return n === 1 ? minCost : -1;
 };
+
+// 36. Valid Sudoku
+var isSudokuValid = function (board) {
+    const ROWS = 9, COLS = 9, BOXES = 9;
+    var rowContsraint = new Array(ROWS).fill().map(() => new Set());
+    var colContsraint = new Array(COLS).fill().map(() => new Set());
+    var boxContsraint = new Array(BOXES).fill().map(() => new Set());
+    for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+            let currCell = board[r][c];
+            let box = Math.floor(r / 3) * 3 + Math.floor(c / 3);
+            if (currCell !== ".") {
+                if (rowContsraint[r].has(currCell) || colContsraint[c].has(currCell) ||
+                    boxContsraint[box].has(currCell)) { return false; }
+                rowContsraint[r].add(currCell);
+                colContsraint[c].add(currCell);
+                boxContsraint[box].add(currCell);
+            }
+        }
+    }
+    return true;
+};
